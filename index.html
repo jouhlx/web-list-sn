@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -42,21 +42,17 @@
   </script>
 
   <style>
-    /* Prevent any overflow issues on small screens */
+    /* Prevent horizontal page overflow on small mobile screens */
     html, body {
       max-width: 100vw;
       overflow-x: hidden;
-    }
-    *, ::before, ::after {
-      word-break: break-word;
-      overflow-wrap: anywhere;
     }
 
     /* Custom scan reticle and animations */
     .scan-reticle {
       position: absolute;
-      left: 4%;
-      right: 4%;
+      left: 6%;
+      right: 6%;
       top: 25%;
       bottom: 25%;
       border: 2px dashed rgba(99, 102, 241, 0.95);
@@ -66,8 +62,8 @@
     }
     .laser-line {
       position: absolute;
-      left: 4%;
-      right: 4%;
+      left: 6%;
+      right: 6%;
       top: 50%;
       height: 2px;
       background: linear-gradient(90deg, transparent, #818cf8, #4f46e5, #818cf8, transparent);
@@ -439,42 +435,42 @@
             <p id="tabDescText" class="text-xs text-slate-400 mt-1">Data sinkron langsung dari Google Sheet (bisa diakses di HP manapun)</p>
           </div>
 
-          <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+          <div class="flex items-center gap-1.5 flex-wrap w-full sm:w-auto justify-start sm:justify-end">
             <!-- Refresh Cloud Data Button -->
             <button id="btnRefreshCloud" 
                     title="Tarik data terbaru dari Google Sheet"
-                    class="p-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 flex items-center gap-1 transition">
-              <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-              <span class="text-xs hidden sm:inline">Refresh Cloud</span>
+                    class="px-2.5 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 flex items-center gap-1 text-xs transition">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              <span class="text-xs">Refresh</span>
             </button>
 
             <!-- Copy Sheet Format (Clipboard) -->
             <button id="btnCopyClipboard" 
-                    title="Salin baris dalam format Spreadsheet (Tab-delimited) untuk langsung di-paste"
-                    class="px-2.5 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-medium border border-slate-600 flex items-center gap-1.5 transition">
+                    title="Salin baris dalam format Spreadsheet"
+                    class="px-2.5 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-medium border border-slate-600 flex items-center gap-1 transition">
               <i data-lucide="copy" class="w-3.5 h-3.5"></i>
               <span>Salin</span>
             </button>
 
             <!-- Kirim Semua Antrean Lokal ke Google Sheet -->
             <button id="btnSyncAll" 
-                    class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium shadow-md shadow-emerald-600/20 flex items-center gap-1.5 transition">
+                    class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium shadow-md shadow-emerald-600/20 flex items-center gap-1 transition">
               <i data-lucide="send" class="w-3.5 h-3.5"></i>
-              <span>Kirim Antrean</span>
+              <span>Kirim</span>
             </button>
 
             <!-- Export CSV -->
             <button id="btnExportCSV" 
                     title="Download file CSV"
                     class="p-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 border border-slate-600 transition">
-              <i data-lucide="download" class="w-4 h-4"></i>
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
             </button>
 
             <!-- Clear All -->
             <button id="btnClearAll" 
                     title="Bersihkan tabel lokal"
                     class="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition">
-              <i data-lucide="trash-2" class="w-4 h-4"></i>
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             </button>
           </div>
         </div>
@@ -521,16 +517,19 @@
           </table>
         </div>
 
-        <!-- Target Sheet Information Banner -->
-        <div class="mt-4 p-3 bg-slate-900/60 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
-          <div class="flex items-center space-x-2 text-slate-400">
+        <!-- Target Sheet Information Banner (Responsive: Stack on mobile, inline on laptop) -->
+        <div class="mt-4 p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
+          <div class="flex items-center space-x-2 text-slate-400 min-w-0">
             <i data-lucide="link" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-            <span class="truncate max-w-xs sm:max-w-md">Target: Google Sheets (ID: 1ovocklaF-petCx2nHZTjHN0NKARAw3-HJivESlIcRGM)</span>
+            <span class="truncate text-[11px] text-slate-300">
+              Target: <b class="text-emerald-400 font-mono">Google Sheet</b>
+              <span class="text-slate-500 text-[10px] hidden md:inline font-mono">(ID: 1ovock...IcRGM)</span>
+            </span>
           </div>
-          <span id="syncEndpointStatus" class="text-[11px] text-amber-400 flex items-center gap-1 font-medium">
-            <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
-            Webhook belum diset
-          </span>
+          <div id="syncEndpointStatus" class="flex items-center gap-1.5 text-[11px] text-amber-400 font-medium shrink-0">
+            <i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0"></i>
+            <span>Cloud belum diset</span>
+          </div>
         </div>
       </div>
 
@@ -699,10 +698,12 @@
     let currentTab = "cloud"; // "cloud" | "local"
     let lastScannedText = "";
     let lastScanTime = 0;
-    const SCAN_THROTTLE_MS = 600; // Super cepat & responsif (hanya 600ms debounce)
+    const SCAN_THROTTLE_MS = 400; // Cepat 400ms
     let currentZoom = 1.0;
     let currentVideoTrack = null;
     let currentScanFilterMode = 'all'; // all | zte | huawei | raisecom | fiberhome | precon
+    let availableCameras = [];
+    let currentCameraIndex = 0;
 
     // DOM Elements
     const inputTanggal = document.getElementById('inputTanggal');
@@ -982,166 +983,132 @@
     function parseTargetBarcode(decodedText) {
       if (!decodedText) return null;
       let raw = String(decodedText).trim().replace(/[\r\n\t]+/g, ' ');
-      // Bersihkan spasi atau simbol di awal/akhir
       raw = raw.replace(/^[\s:=-]+|[\s:=-]+$/g, '');
       const upper = raw.toUpperCase();
 
-      // === 1. HUAWEI: FOKUS PENUH KE BARCODE SN (Di bawah MAC) ===
-      
-      // Kasus A: Terbaca teks dengan prefix SN: misal "SN:485754430B99F8AF" atau "SN 4857..."
-      const hwPrefixedMatch = upper.match(/(?:^|\b)SN[\s:]*([0-9A-Z]{12,20})\b/);
-      if (hwPrefixedMatch && hwPrefixedMatch[1]) {
-        const val = hwPrefixedMatch[1];
-        const currentM = selectMerk.value;
-        const finalMerk = (currentM === 'Huawei Bekas') ? 'Huawei Bekas' : 'Huawei Baru';
-        return {
-          status: 'valid',
-          sn: val,
-          merk: finalMerk,
-          label: `SN: Huawei (${finalMerk.includes('Bekas') ? 'Bekas' : 'Baru'})`
-        };
-      }
+      // ============================================================
+      // URUTAN PRIORITAS DETEKSI (dari paling spesifik ke umum)
+      // ============================================================
 
-      // Kasus B: Barcode langsung mengkodekan 4857... (16 hex karakter) atau HWTC...
-      const hwHexMatch = upper.match(/4857[0-9A-F]{12}/) || upper.match(/HWTC[0-9A-F]{8,12}/);
-      if (hwHexMatch) {
-        const currentM = selectMerk.value;
-        const finalMerk = (currentM === 'Huawei Bekas') ? 'Huawei Bekas' : 'Huawei Baru';
-        return {
-          status: 'valid',
-          sn: hwHexMatch[0],
-          merk: finalMerk,
-          label: `SN: Huawei (${finalMerk.includes('Bekas') ? 'Bekas' : 'Baru'})`
-        };
-      }
-
-      // Kasus C: Barcode diawali 4857 (panjang 12-20 karakter)
-      if (upper.startsWith('4857') && upper.length >= 14) {
-        const currentM = selectMerk.value;
-        const finalMerk = (currentM === 'Huawei Bekas') ? 'Huawei Bekas' : 'Huawei Baru';
-        return {
-          status: 'valid',
-          sn: upper.substring(0, 16),
-          merk: finalMerk,
-          label: `SN: Huawei (${finalMerk.includes('Bekas') ? 'Bekas' : 'Baru'})`
-        };
-      }
-
-      // === 2. ZTE: FOKUS GPON SN (ZTEGDD... / ZTEG...) ===
-      const zteMatch = upper.match(/ZTEG[0-9A-Z]{8}/);
-      if (zteMatch || upper.startsWith('ZTEG')) {
-        const snClean = zteMatch ? zteMatch[0] : upper;
-        const currentM = selectMerk.value;
-        const finalMerk = (currentM === 'ZTE Bekas') ? 'ZTE Bekas' : 'ZTE Baru';
-        return {
-          status: 'valid',
-          sn: snClean,
-          merk: finalMerk,
-          label: `GPON SN: ZTE (${finalMerk.includes('Bekas') ? 'Bekas' : 'Baru'})`
-        };
-      }
-
-      // === 3. RAISECOM: FOKUS GPON SN (RCMG...) ===
-      const rcmgMatch = upper.match(/RCMG[0-9A-Z]{8}/);
-      if (rcmgMatch || upper.startsWith('RCMG')) {
-        const snClean = rcmgMatch ? rcmgMatch[0] : upper;
-        const currentM = selectMerk.value;
-        const finalMerk = (currentM === 'Raisecom Bekas') ? 'Raisecom Bekas' : 'Raisecom Baru';
-        return {
-          status: 'valid',
-          sn: snClean,
-          merk: finalMerk,
-          label: `GPON SN: Raisecom (${finalMerk.includes('Bekas') ? 'Bekas' : 'Baru'})`
-        };
-      }
-
-      // === 4. FIBER HOME: FOKUS GPON SN (FHTT...) ===
-      const fhttMatch = upper.match(/FHTT[0-9A-Z]{8}/);
-      if (fhttMatch || upper.startsWith('FHTT')) {
-        return {
-          status: 'valid',
-          sn: fhttMatch ? fhttMatch[0] : upper,
-          merk: 'Fiber Home',
-          label: 'GPON SN: Fiber Home (1D/QR)'
-        };
-      }
-
-      // === 5. PRECON (DROPWIRE FIBER) ===
+      // === PRECON DULU (barcode angka murni, harus cek sebelum lainnya) ===
       const cleanPrecon = upper.replace(/^0+/, '');
       if (upper.includes('860250') || cleanPrecon.startsWith('860250')) {
-        return {
-          status: 'valid',
-          sn: cleanPrecon.length >= 10 ? cleanPrecon : upper,
-          merk: 'Precon 150',
-          label: 'Precon 150 (860250)'
-        };
+        return { status: 'valid', sn: cleanPrecon || upper, merk: 'Precon 150', label: 'Precon 150 (860250)' };
       }
       if (upper.includes('853360') || cleanPrecon.startsWith('853360')) {
-        return {
-          status: 'valid',
-          sn: cleanPrecon.length >= 10 ? cleanPrecon : upper,
-          merk: 'precon 100',
-          label: 'precon 100 (853360)'
-        };
+        return { status: 'valid', sn: cleanPrecon || upper, merk: 'precon 100', label: 'precon 100 (853360)' };
       }
       if (upper.includes('MDTDW250') || (upper.includes('MDTDW') && upper.includes('250'))) {
-        return {
-          status: 'valid',
-          sn: cleanPrecon,
-          merk: 'Precon 250',
-          label: 'Precon 250 (MDTDW250)'
-        };
+        return { status: 'valid', sn: upper, merk: 'Precon 250', label: 'Precon 250 (MDTDW250)' };
       }
       if (upper.includes('846370') || cleanPrecon.startsWith('846370')) {
-        return {
-          status: 'valid',
-          sn: cleanPrecon.length >= 10 ? cleanPrecon : upper,
-          merk: 'Precon 50',
-          label: 'Precon 50 (846370)'
-        };
+        return { status: 'valid', sn: cleanPrecon || upper, merk: 'Precon 50', label: 'Precon 50 (846370)' };
       }
 
-      // === 6. EKSPLISIT ABAIKAN BARCODE SAMPINGAN (SILENT IGNORE) ===
-      // a. Abaikan MAC Address
-      if (/^MAC[:\s]/i.test(raw) || /^([0-9A-F]{2}[:-]){5}[0-9A-F]{2}$/i.test(raw) || (/^[0-9A-F]{12}$/i.test(upper) && !upper.startsWith('ZTEG') && !upper.startsWith('RCMG') && !upper.startsWith('FHTT') && !upper.startsWith('4857'))) {
-        return { status: 'ignore', message: 'Melewati MAC... Bidik baris SN bawah' };
+      // === ABAIKAN BARCODE SAMPINGAN (SILENT IGNORE) ===
+      // Abaikan EN ZTE (EQUGT...)
+      if (upper.startsWith('EQUGT') || /^EN\s*:/i.test(raw)) {
+        return { status: 'ignore', message: 'Lewati EN... Bidik GPON SN (ZTEG...)' };
       }
-      // b. Abaikan EN ZTE (EQUGT...)
-      if (/^EN[:\s]/i.test(raw) || upper.startsWith('EQUGT')) {
-        return { status: 'ignore', message: 'Melewati EN ZTE... Bidik baris GPON SN' };
+      // Abaikan Huawei PROD ID / P/N
+      if (/^PROD\s*ID/i.test(raw) || /^\(1P\)P\/N/i.test(raw) || upper.startsWith('50087') || upper.startsWith('50089') || upper.startsWith('21500')) {
+        return { status: 'ignore', message: 'Lewati PROD ID... Bidik SN bawah (4857...)' };
       }
-      // c. Abaikan Huawei PROD ID / P/N
-      if (/^PROD\s*ID/i.test(raw) || /^\(1P\)P\/N/i.test(raw) || upper.startsWith('215008') || upper.startsWith('50087') || upper.startsWith('50089')) {
-        return { status: 'ignore', message: 'Melewati Prod ID... Bidik baris SN bawah' };
+      // Abaikan Raisecom SN Internal (165003...) / DSN / 201F54...
+      if (upper.startsWith('165003') || /^DSN/i.test(upper) || upper.startsWith('201F54') || upper.startsWith('P/N') || upper.startsWith('REV')) {
+        return { status: 'ignore', message: 'Lewati SN Internal... Bidik GPON SN (RCMG...)' };
       }
-      // d. Abaikan Raisecom SN Pabrik internal (165003...) / DSN
-      if (upper.startsWith('165003') || /^DSN[:\s]/i.test(raw) || /^201F54/i.test(raw)) {
-        return { status: 'ignore', message: 'Melewati SN Pabrik... Bidik GPON SN (RCMG)' };
+      // Abaikan MAC Address murni (12 hex tanpa prefix ONT)
+      if (/^([0-9A-F]{2}[:\-.]){5}[0-9A-F]{2}$/i.test(raw)) {
+        return { status: 'ignore', message: 'Lewati MAC... Bidik barcode SN' };
       }
-      // e. Abaikan model FiberHome
+      // Abaikan FiberHome model number
       if (upper.startsWith('2094480') || upper.startsWith('FHVHLK')) {
-        return { status: 'ignore', message: 'Melewati Kode Model... Bidik GPON SN' };
+        return { status: 'ignore', message: 'Lewati kode model... Bidik GPON SN (FHTT...)' };
       }
 
-      // === 7. FALLBACK KHUSUS JIKA MODE HUAWEI SEDANG DIPILIH ===
+      // === 1. HUAWEI SN ===
+      // Prioritas A: Barcode dengan prefix "SN:" atau "SN " (label sticker Huawei)
+      // Contoh: "SN:485754430B99F8AF" atau terbaca langsung "SN 4857544308B6..."
+      const hwSNPrefix = upper.match(/^SN[\s:]+([0-9A-F]{14,20})$/);
+      if (hwSNPrefix && hwSNPrefix[1]) {
+        const sn = hwSNPrefix[1];
+        const finalMerk = (selectMerk.value === 'Huawei Bekas') ? 'Huawei Bekas' : 'Huawei Baru';
+        return { status: 'valid', sn, merk: finalMerk, label: `SN Huawei: ${sn.substring(0,8)}... (${finalMerk})` };
+      }
+
+      // Prioritas B: Barcode diawali "4857" (SN Huawei 16 digit hex)
+      // Contoh: 485754430B99F8AF, 4857544308B6ABCD
+      const hwDirect = upper.match(/^(4857[0-9A-F]{12})/);
+      if (hwDirect) {
+        const sn = hwDirect[1];
+        const finalMerk = (selectMerk.value === 'Huawei Bekas') ? 'Huawei Bekas' : 'Huawei Baru';
+        return { status: 'valid', sn, merk: finalMerk, label: `SN Huawei: ${sn.substring(0,8)}... (${finalMerk})` };
+      }
+
+      // Prioritas C: Barcode mengandung 4857 di tengah (terkadang terbaca bersama prefix)
+      const hwEmbedded = upper.match(/(4857[0-9A-F]{12})/);
+      if (hwEmbedded) {
+        const sn = hwEmbedded[1];
+        const finalMerk = (selectMerk.value === 'Huawei Bekas') ? 'Huawei Bekas' : 'Huawei Baru';
+        return { status: 'valid', sn, merk: finalMerk, label: `SN Huawei: ${sn.substring(0,8)}... (${finalMerk})` };
+      }
+
+      // Prioritas D: HWTC prefix
+      const hwHWTC = upper.match(/^(HWTC[0-9A-Z]{8,12})/);
+      if (hwHWTC) {
+        const sn = hwHWTC[1];
+        const finalMerk = (selectMerk.value === 'Huawei Bekas') ? 'Huawei Bekas' : 'Huawei Baru';
+        return { status: 'valid', sn, merk: finalMerk, label: `SN Huawei HWTC (${finalMerk})` };
+      }
+
+      // === 2. ZTE GPON SN ===
+      // Contoh: ZTEGDD9801E5, ZTEGDD985264
+      const zteMatch = upper.match(/(ZTEG[0-9A-Z]{6,10})/);
+      if (zteMatch || upper.startsWith('ZTEG')) {
+        const sn = zteMatch ? zteMatch[1] : upper.substring(0, 16);
+        const finalMerk = (selectMerk.value === 'ZTE Bekas') ? 'ZTE Bekas' : 'ZTE Baru';
+        return { status: 'valid', sn, merk: finalMerk, label: `GPON SN ZTE (${finalMerk})` };
+      }
+
+      // === 3. RAISECOM GPON SN ===
+      // Contoh: RCMG3B582355, RCMG3B582340
+      const rcmgMatch = upper.match(/(RCMG[0-9A-Z]{6,10})/);
+      if (rcmgMatch || upper.startsWith('RCMG')) {
+        const sn = rcmgMatch ? rcmgMatch[1] : upper.substring(0, 16);
+        const finalMerk = (selectMerk.value === 'Raisecom Bekas') ? 'Raisecom Bekas' : 'Raisecom Baru';
+        return { status: 'valid', sn, merk: finalMerk, label: `GPON SN Raisecom (${finalMerk})` };
+      }
+
+      // === 4. FIBER HOME GPON SN ===
+      const fhttMatch = upper.match(/(FHTT[0-9A-Z]{6,12})/);
+      if (fhttMatch || upper.startsWith('FHTT')) {
+        const sn = fhttMatch ? fhttMatch[1] : upper;
+        return { status: 'valid', sn, merk: 'Fiber Home', label: 'GPON SN FiberHome' };
+      }
+
+      // === FALLBACK: MODE FILTER AKTIF (Huawei/ZTE/Raisecom dipilih manual) ===
       if (currentScanFilterMode === 'huawei' || selectMerk.value.includes('Huawei')) {
-        // Jika mode Huawei aktif dan terbaca barcode 14-20 digit selain MAC/PROD ID
-        const cleanCandidate = upper.replace(/[^0-9A-Z]/g, '');
-        if (cleanCandidate.length >= 14 && cleanCandidate.length <= 22) {
-          const currentM = selectMerk.value;
-          const finalMerk = (currentM === 'Huawei Bekas') ? 'Huawei Bekas' : 'Huawei Baru';
-          return {
-            status: 'valid',
-            sn: cleanCandidate,
-            merk: finalMerk,
-            label: `SN: Huawei (${finalMerk.includes('Bekas') ? 'Bekas' : 'Baru'})`
-          };
+        // Panjang 14-20 char alfanumerik, bukan MAC
+        const c = upper.replace(/[^0-9A-Z]/g, '');
+        if (c.length >= 14 && c.length <= 20 && !/^[0-9A-F]{12}$/.test(c)) {
+          const finalMerk = (selectMerk.value === 'Huawei Bekas') ? 'Huawei Bekas' : 'Huawei Baru';
+          return { status: 'valid', sn: c, merk: finalMerk, label: `SN Huawei fallback (${finalMerk})` };
+        }
+      }
+
+      if (currentScanFilterMode === 'zte') {
+        // ZTE mode aktif, coba tangkap apapun yang 12 char alfanum
+        const c = upper.replace(/[^0-9A-Z]/g, '');
+        if (c.startsWith('ZTEG') || (c.length === 12 && !c.match(/^[0-9A-F]{12}$/))) {
+          const finalMerk = (selectMerk.value === 'ZTE Bekas') ? 'ZTE Bekas' : 'ZTE Baru';
+          return { status: 'valid', sn: c, merk: finalMerk, label: `GPON SN ZTE fallback` };
         }
       }
 
       return {
         status: 'unmatched',
-        message: 'Arahkan garis laser tepat ke barcode SN Huawei (4857...)'
+        message: `Bidik barcode SN yang tepat (4857.../ZTEG.../RCMG...)`
       };
     }
 
@@ -1179,42 +1146,62 @@
         txtToggleCamera.textContent = "Hentikan";
 
         const config = {
-          fps: 40, // Ultra-fast frame rate (40 FPS) untuk instant detection
+          fps: 30,
           qrbox: (viewfinderWidth, viewfinderHeight) => {
-            // Viewfinder lebih fleksibel agar barcode langsung terbaca tanpa penundaan
-            const width = Math.min(viewfinderWidth * 0.96, 500);
-            const height = Math.min(viewfinderHeight * 0.50, 220);
+            const width = Math.min(viewfinderWidth * 0.92, 440);
+            const height = Math.min(viewfinderHeight * 0.30, 120);
             return { width: Math.floor(width), height: Math.floor(height) };
           },
           aspectRatio: 1.0,
           experimentalFeatures: {
-            useBarCodeDetectorIfSupported: true // Akselerasi hardware bawaan HP
-          },
-          formatsToSupport: [
-            Html5QrcodeSupportedFormats.CODE_128,
-            Html5QrcodeSupportedFormats.CODE_39,
-            Html5QrcodeSupportedFormats.QR_CODE,
-            Html5QrcodeSupportedFormats.DATA_MATRIX
-          ]
+            useBarCodeDetectorIfSupported: true
+          }
         };
 
-        // Hindari OverconstrainedError di mobile & aktifkan resolusi ideal untuk kecepatan
-        const cameraConstraints = {
-          facingMode: { ideal: currentFacingMode },
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
-        };
+        // Deteksi kamera perangkat (Mendukung Laptop & HP)
+        try {
+          availableCameras = await Html5Qrcode.getCameras();
+        } catch (e) {
+          console.warn("Could not list cameras:", e);
+        }
 
-        await html5QrCode.start(
-          cameraConstraints,
-          config,
-          onScanSuccess,
-          onScanFailure
-        );
+        let started = false;
+
+        // 1. Jika ada kamera terdeteksi
+        if (availableCameras && availableCameras.length > 0) {
+          let chosenCamera = null;
+          if (currentFacingMode === "environment") {
+            chosenCamera = availableCameras.find(c => /back|rear|environment|belakang/i.test(c.label));
+          } else {
+            chosenCamera = availableCameras.find(c => /front|user|depan|webcam/i.test(c.label));
+          }
+          if (!chosenCamera) {
+            chosenCamera = availableCameras[currentCameraIndex % availableCameras.length];
+          }
+
+          try {
+            await html5QrCode.start(chosenCamera.id, config, onScanSuccess, onScanFailure);
+            started = true;
+          } catch (camIdErr) {
+            console.warn("Start with camera ID failed, trying facingMode fallback:", camIdErr);
+          }
+        }
+
+        // 2. Fallback jika start kamera ID gagal / belum jalan
+        if (!started) {
+          try {
+            await html5QrCode.start({ facingMode: currentFacingMode }, config, onScanSuccess, onScanFailure);
+            started = true;
+          } catch (errFacing) {
+            // Jika di laptop yang tidak punya kamera belakang, coba kamera depan (user)
+            await html5QrCode.start({ facingMode: "user" }, config, onScanSuccess, onScanFailure);
+            started = true;
+          }
+        }
 
         isCameraRunning = true;
 
-        // Ambil video track untuk zoom & autofocus dinamis
+        // Terapkan continuous autofocus jika didukung hardware
         setTimeout(async () => {
           try {
             const videoEl = document.querySelector("#reader video");
@@ -1233,22 +1220,12 @@
           } catch (e) {
             console.warn("Autofocus constraint note:", e);
           }
-        }, 300);
+        }, 100);
 
       } catch (err) {
         console.error("Camera start error:", err);
-        try {
-          await html5QrCode.start(
-            {},
-            { fps: 20 },
-            onScanSuccess,
-            onScanFailure
-          );
-          isCameraRunning = true;
-        } catch (retryErr) {
-          alert("Gagal mengakses kamera: " + (err.message || err) + "\nPastikan browser memiliki izin akses kamera (HTTPS).");
-          stopCamera();
-        }
+        alert("Gagal mengakses kamera: " + (err.message || err) + "\nPastikan browser memiliki izin akses kamera.");
+        stopCamera();
       }
     }
 
@@ -1273,6 +1250,10 @@
       const txtZoom = document.getElementById('txtZoom');
       if (txtZoom) txtZoom.textContent = "1x";
       currentZoom = 1.0;
+      const videoEl = document.querySelector("#reader video");
+      if (videoEl) {
+        videoEl.style.transform = 'none';
+      }
     }
 
     function toggleCamera() {
@@ -1284,7 +1265,12 @@
     }
 
     async function switchCamera() {
-      currentFacingMode = (currentFacingMode === "environment") ? "user" : "environment";
+      if (availableCameras && availableCameras.length > 1) {
+        currentCameraIndex = (currentCameraIndex + 1) % availableCameras.length;
+        currentFacingMode = (currentFacingMode === "environment") ? "user" : "environment";
+      } else {
+        currentFacingMode = (currentFacingMode === "environment") ? "user" : "environment";
+      }
       if (isCameraRunning) {
         await stopCamera();
         await startCamera();
@@ -1295,8 +1281,11 @@
     function onScanSuccess(decodedText) {
       try {
         const now = Date.now();
-        // Throttle repeat scans
-        if (decodedText === lastScannedText && (now - lastScanTime) < SCAN_THROTTLE_MS) {
+        // Throttle: Cegah scan duplikat dalam 400ms, tapi RESET jika SN sudah diisi
+        const isRepeat = (decodedText === lastScannedText);
+        const isTooFast = (now - lastScanTime) < SCAN_THROTTLE_MS;
+        // Jika SN sudah diganti manual (beda dengan yang terakhir scan), izinkan re-scan
+        if (isRepeat && isTooFast && inputSN.value.toUpperCase() === (lastScannedText || "").toUpperCase()) {
           return;
         }
 
@@ -1390,6 +1379,8 @@
       inputSN.value = '';
       selectMerk.value = '';
       ruleBadge.classList.add('hidden');
+      lastScannedText = ''; // Reset throttle agar barcode berikutnya langsung terbaca
+      lastScanTime = 0;
       inputSN.focus();
 
       playBeep(true);
@@ -1594,8 +1585,8 @@
 
       if (scriptUrl) {
         syncEndpointStatus.innerHTML = `
-          <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
-          <span class="text-emerald-400 font-medium">Cloud Webhook Terhubung</span>
+          <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
+          <span class="text-emerald-400 font-medium">Cloud Terhubung</span>
         `;
         if (boxShareLink) boxShareLink.classList.remove('hidden');
         if (btnCopyShareLink) {
@@ -1608,8 +1599,8 @@
         }
       } else {
         syncEndpointStatus.innerHTML = `
-          <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-amber-400"></i>
-          <span class="text-amber-400 font-medium">Cloud belum diset (Pakai Salin Baris)</span>
+          <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
+          <span class="text-amber-400 font-medium">Cloud Belum Diset</span>
         `;
         if (boxShareLink) boxShareLink.classList.add('hidden');
       }
