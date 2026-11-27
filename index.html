@@ -624,7 +624,7 @@
     let currentTab = "cloud"; // "cloud" | "local"
     let lastScannedText = "";
     let lastScanTime = 0;
-    const SCAN_THROTTLE_MS = 400; // Cepat 400ms
+    const SCAN_THROTTLE_MS = 250; // Super cepat 250ms
     let currentZoom = 1.0;
     let currentVideoTrack = null;
     let currentScanFilterMode = 'all'; // all | zte | huawei | raisecom | fiberhome | precon
@@ -1063,10 +1063,18 @@
           fps: 30,
           qrbox: (viewfinderWidth, viewfinderHeight) => {
             const width = Math.min(viewfinderWidth * 0.92, 440);
-            const height = Math.min(viewfinderHeight * 0.30, 120);
+            const height = Math.min(viewfinderHeight * 0.28, 110);
             return { width: Math.floor(width), height: Math.floor(height) };
           },
           aspectRatio: 1.0,
+          disableFlip: true,
+          formatsToSupport: [
+            Html5QrcodeSupportedFormats.CODE_128,
+            Html5QrcodeSupportedFormats.CODE_39,
+            Html5QrcodeSupportedFormats.QR_CODE,
+            Html5QrcodeSupportedFormats.EAN_13,
+            Html5QrcodeSupportedFormats.ITF
+          ],
           experimentalFeatures: {
             useBarCodeDetectorIfSupported: true
           }
@@ -1190,15 +1198,33 @@
       }
     }
 
-    // Scanning Callback - Langsung tangkap barcode apapun tanpa filter kata kunci
+    // Scanning Callback - Cepat & khusus Huawei hanya ambil SN (abaikan MAC & PROD ID)
     function onScanSuccess(decodedText) {
       try {
         if (!decodedText) return;
-        const cleanSN = String(decodedText).trim().replace(/[\r\n\t]+/g, ' ').toUpperCase();
+        let cleanSN = String(decodedText).trim().replace(/[\r\n\t]+/g, ' ').replace(/^[\s:=-]+|[\s:=-]+$/g, '').toUpperCase();
         if (!cleanSN) return;
 
+        // Khusus Huawei: Abaikan PROD ID, P/N, dan MAC Address agar hanya barcode SN yang masuk
+        if (/^PROD\s*ID/i.test(cleanSN) || /^\(1P\)P\/N/i.test(cleanSN) || cleanSN.startsWith('21500') || cleanSN.startsWith('50087') || cleanSN.startsWith('50089')) {
+          scanStatusText.textContent = "🔍 Lewati PROD ID... Bidik barcode SN (4857...)";
+          scanStatusText.className = "text-indigo-300 font-medium text-[11px]";
+          return;
+        }
+        if (/^MAC[:\s]/i.test(cleanSN) || /^([0-9A-F]{2}[:\-.]){5}[0-9A-F]{2}$/i.test(cleanSN) || (/^[0-9A-F]{12}$/.test(cleanSN) && !cleanSN.startsWith('4857') && !cleanSN.startsWith('ZTEG') && !cleanSN.startsWith('RCMG') && !cleanSN.startsWith('FHTT'))) {
+          scanStatusText.textContent = "🔍 Lewati MAC... Bidik barcode SN (4857...)";
+          scanStatusText.className = "text-indigo-300 font-medium text-[11px]";
+          return;
+        }
+
+        // Jika terbaca dengan prefix "SN:" atau "SN ", ambil hanya kodenya
+        const snPrefixMatch = cleanSN.match(/^SN[\s:]+([0-9A-Z]{10,24})$/);
+        if (snPrefixMatch && snPrefixMatch[1]) {
+          cleanSN = snPrefixMatch[1];
+        }
+
         const now = Date.now();
-        // Throttle: Cegah scan duplikat dalam 400ms
+        // Throttle: Cegah scan duplikat dalam 250ms
         const isRepeat = (cleanSN === lastScannedText);
         const isTooFast = (now - lastScanTime) < SCAN_THROTTLE_MS;
         if (isRepeat && isTooFast && inputSN.value.toUpperCase() === lastScannedText) {
@@ -1682,4 +1708,3 @@
   </script>
 </body>
 </html>
-
